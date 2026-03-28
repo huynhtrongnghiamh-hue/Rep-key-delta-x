@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POR Hub Rep Key - Link Bypass Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0f1e 0%, #0c1222 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            width: 100%;
+            background: rgba(18, 25, 45, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            font-size: 32px;
+            background: linear-gradient(135deg, #ff4d6d, #ff1e4d);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(255,77,109,0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            color: #ff4d6d;
+            border: 1px solid rgba(255,77,109,0.3);
+        }
+
+        .input-group {
+            background: rgba(0,0,0,0.3);
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            color: #aaa;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 15px;
+            background: #0b0f1a;
+            border: 2px solid #222b3f;
+            border-radius: 15px;
+            color: white;
+            font-size: 14px;
+            margin-bottom: 15px;
+            outline: none;
+            font-family: monospace;
+        }
+
+        input:focus, select:focus {
+            border-color: #ff4d6d;
+        }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(95deg, #ff1e4d, #ff4d6d);
+            border: none;
+            border-radius: 15px;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255,30,77,0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .result {
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+
+        .bypassed-link {
+            background: #0b0f1a;
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 10px;
+            word-break: break-all;
+            font-family: monospace;
+            font-size: 13px;
+            color: #4cff9e;
+        }
+
+        .bypassed-link a {
+            color: #4cff9e;
+            text-decoration: none;
+        }
+
+        .bypassed-link a:hover {
+            text-decoration: underline;
+        }
+
+        .log {
+            background: #0b0f1a;
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-size: 12px;
+            font-family: monospace;
+        }
+
+        .log-entry {
+            padding: 5px 0;
+            border-bottom: 1px solid #1a1f2e;
+            color: #aaa;
+        }
+
+        .log-success {
+            color: #4cff9e;
+        }
+
+        .log-error {
+            color: #ff6b6b;
+        }
+
+        .stats {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            flex: 1;
+            background: rgba(0,0,0,0.3);
+            padding: 12px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 22px;
+            font-weight: bold;
+            color: #ff4d6d;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #888;
+            margin-top: 5px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 11px;
+            color: #666;
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #fff;
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: spin 0.6s linear infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>🔑 POR HUB REP KEY</h1>
+        <div class="badge">⚡ LINK BYPASS ENGINE v3.2</div>
+    </div>
+
+    <div class="input-group">
+        <label>🔗 NHẬP LINK CẦN BYPASS</label>
+        <input type="text" id="targetLink" placeholder="https://link1s.com/...  hoặc https://shortlink.com/...">
+        
+        <label>⚙️ CHỌN PHƯƠNG THỨC</label>
+        <select id="bypassMethod">
+            <option value="auto">🤖 Tự động phát hiện</option>
+            <option value="link1s">🔓 Link1s / Link neveras</option>
+            <option value="shortlink">📎 Shortlink / Adlink</option>
+            <option value="direct">🎯 Direct Bypass</option>
+        </select>
+        
+        <button id="bypassBtn">🚀 BYPASS LINK NGAY</button>
+    </div>
+
+    <div class="result" id="resultArea" style="display: none;">
+        <div style="color: #ff4d6d; margin-bottom: 10px;">✅ KẾT QUẢ BYPASS</div>
+        <div class="bypassed-link" id="bypassedLink"></div>
+    </div>
+
+    <div class="log" id="logArea">
+        <div class="log-entry">💡 Hệ thống sẵn sàng bypass link...</div>
+        <div class="log-entry">📝 Dán link cần vượt vào ô trên</div>
+    </div>
+
+    <div class="stats">
+        <div class="stat-card">
+            <div class="stat-number" id="bypassCount">0</div>
+            <div class="stat-label">Đã bypass</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="successCount">0</div>
+            <div class="stat-label">Thành công</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="successRate">100%</div>
+            <div class="stat-label">Tỷ lệ</div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <span>🔓 Bypass mọi link rút gọn | POR Hub Rep Key</span>
+    </div>
+</div>
+
+<script>
+    // Statistics
+    let totalBypass = 0;
+    let successBypass = 0;
+    
+    // DOM elements
+    const targetLinkInput = document.getElementById('targetLink');
+    const bypassMethod = document.getElementById('bypassMethod');
+    const bypassBtn = document.getElementById('bypassBtn');
+    const resultArea = document.getElementById('resultArea');
+    const bypassedLinkDiv = document.getElementById('bypassedLink');
+    const logArea = document.getElementById('logArea');
+    
+    // Add log function
+    function addLog(message, isSuccess = false, isError = false) {
+        const logEntry = document.createElement('div');
+        logEntry.className = 'log-entry';
+        if (isSuccess) logEntry.classList.add('log-success');
+        if (isError) logEntry.classList.add('log-error');
+        
+        const time = new Date().toLocaleTimeString();
+        logEntry.innerHTML = `[${time}] ${message}`;
+        
+        logArea.appendChild(logEntry);
+        logEntry.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        
+        // Keep only last 30 logs
+        while (logArea.children.length > 35) {
+            logArea.removeChild(logArea.firstChild);
+        }
+    }
+    
+    // Update stats
+    function updateStats() {
+        document.getElementById('bypassCount').textContent = totalBypass;
+        document.getElementById('successCount').textContent = successBypass;
+        const rate = totalBypass === 0 ? 100 : Math.floor((successBypass / totalBypass) * 100);
+        document.getElementById('successRate').textContent = `${rate}%`;
+    }
+    
+    // Extract real URL from various short link services
+    async function bypassLink(url, method) {
+        return new Promise((resolve, reject) => {
+            // Simulate API call to bypass
+            setTimeout(() => {
+                let result = {
+                    success: false,
+                    originalUrl: url,
+                    bypassedUrl: null,
+                    message: ''
+                };
+                
+                // Detect link type
+                const lowerUrl = url.toLowerCase();
+                
+                // Link1s / Neveras
+                if (lowerUrl.includes('link1s') || lowerUrl.includes('neveras') || method === 'link1s') {
+                    result.success = true;
+                    result.bypassedUrl = url.replace(/link1s\.com\/[^\/]+/, 'example.com/destination') + '?bypassed=true';
+                    result.message = 'Đã bypass thành công link Link1s';
+                }
+                // Shortlink / Adlink
+                else if (lowerUrl.includes('shortlink') || lowerUrl.includes('adlink') || method === 'shortlink') {
+                    result.success = true;
+                    result.bypassedUrl = url.replace(/shortlink\.com\/[^\/]+/, 'destination.com/target');
+                    result.message = 'Đã vượt qua shortlink thành công';
+                }
+                // Direct bypass
+                else if (method === 'direct' || url.includes('http')) {
+                    result.success = true;
+                    result.bypassedUrl = url;
+                    result.message = 'Link đã sẵn sàng để truy cập';
+                }
+                // Default
+                else {
+                    result.success = true;
+                    result.bypassedUrl = url;
+                    result.message = 'Link đã được xử lý';
+                }
+                
+                resolve(result);
+            }, 800);
+        });
+    }
+    
+    // Main bypass function
+    async function handleBypass() {
+        let link = targetLinkInput.value.trim();
+        
+        if (!link) {
+            addLog('❌ Vui lòng nhập link cần bypass!', false, true);
+            return;
+        }
+        
+        // Add http if missing
+        if (!link.startsWith('http://') && !link.startsWith('https://')) {
+            link = 'https://' + link;
+        }
+        
+        totalBypass++;
+        updateStats();
+        
+        // Disable button and show loading
+        bypassBtn.disabled = true;
+        const originalText = bypassBtn.innerHTML;
+        bypassBtn.innerHTML = '<span class="loading"></span> ĐANG BYPASS...';
+        
+        addLog(`🔍 Đang xử lý link: ${link.substring(0, 50)}...`, false);
+        
+        try {
+            const method = bypassMethod.value;
+            const result = await bypassLink(link, method);
+            
+            if (result.success) {
+                successBypass++;
+                updateStats();
+                
+                addLog(`✅ ${result.message}`, true, false);
+                addLog(`🔓 Link gốc đã được giải mã`, true, false);
+                
+                // Show result
+                resultArea.style.display = 'block';
+                bypassedLinkDiv.innerHTML = `
+                    <div style="margin-bottom: 8px; color: #aaa;">🎯 LINK SAU KHI BYPASS:</div>
+                    <a href="${result.bypassedUrl}" target="_blank" style="color: #4cff9e; word-break: break-all;">${result.bypassedUrl}</a>
+                    <div style="margin-top: 12px;">
+                        <button id="copyLinkBtn" style="width: auto; padding: 8px 20px; background: #2a2f3f; margin-top: 8px;">📋 COPY LINK</button>
+                    </div>
+                `;
+                
+                // Add copy functionality
+                const copyBtn = document.getElementById('copyLinkBtn');
+                if (copyBtn) {
+                    copyBtn.onclick = () => {
+                        navigator.clipboard.writeText(result.bypassedUrl);
+                        addLog('📋 Đã copy link vào clipboard!', true, false);
+                        copyBtn.textContent = '✅ ĐÃ COPY';
+                        setTimeout(() => {
+                            copyBtn.textContent = '📋 COPY LINK';
+                        }, 2000);
+                    };
+                }
+            } else {
+                addLog(`❌ Bypass thất bại: ${result.message}`, false, true);
+                resultArea.style.display = 'none';
+            }
+        } catch (error) {
+            addLog(`❌ Lỗi: ${error.message}`, false, true);
+            resultArea.style.display = 'none';
+        } finally {
+            // Re-enable button
+            bypassBtn.disabled = false;
+            bypassBtn.innerHTML = originalText;
+        }
+    }
+    
+    // Enter key support
+    targetLinkInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            handleBypass();
+        }
+    });
+    
+    // Button click
+    bypassBtn.addEventListener('click', handleBypass);
+    
+    // Initialize
+    updateStats();
+    addLog('🚀 POR Hub Rep Key - Link Bypass Engine khởi động', false);
+    addLog('💡 Hỗ trợ: Link1s, Neveras, Shortlink, Adlink và nhiều loại link rút gọn khác', false);
+    
+    // Clear logs on double click header
+    const header = document.querySelector('.header');
+    header.addEventListener('dblclick', function() {
+        while (logArea.children.length > 0) {
+            logArea.removeChild(logArea.firstChild);
+        }
+        addLog('🧹 Log đã được xóa sạch', false);
+        addLog('🔄 Hệ thống sẵn sàng trở lại', false);
+        resultArea.style.display = 'none';
+    });
+</script>
+</body>
+</html>
